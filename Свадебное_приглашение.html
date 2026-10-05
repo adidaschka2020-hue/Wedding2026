@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="ru" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Свадебное приглашение — Артур & Карине</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Marck+Script&family=Montserrat:wght@200;300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        /* Основные стили и шрифты */
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #faf8f5;
+            color: #4a4a4a;
+            overflow-x: hidden;
+        }
+
+        .font-serif-title {
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        .font-cursive {
+            font-family: 'Marck Script', cursive;
+        }
+
+        .font-playfair {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* Анимация перелива золота (Shimmer) */
+        @keyframes goldShimmer {
+            0% { background-position: -200% center; }
+            100% { background-position: 200% center; }
+        }
+
+        .shimmer-gold {
+            background: linear-gradient(90deg, #b8973a 0%, #f7f0d0 30%, #d4af37 50%, #f7f0d0 70%, #b8973a 100%);
+            background-size: 250% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: goldShimmer 6s linear infinite;
+        }
+
+        .shimmer-soft {
+            background: linear-gradient(90deg, rgba(212, 175, 55, 0.7) 0%, rgba(249, 241, 215, 0.9) 50%, rgba(212, 175, 55, 0.7) 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: goldShimmer 7s linear infinite;
+        }
+
+        /* Стилизация больших первых букв */
+        .big-cap {
+            font-size: 1.15em;
+            font-weight: 600;
+        }
+
+        /* Интерактивный конверт */
+        .envelope-wrapper {
+            perspective: 1000px;
+        }
+
+        .envelope-flap {
+            transform-origin: top center;
+            transition: transform 0.8s ease-in-out, z-index 0.3s ease;
+        }
+
+        .envelope-open .envelope-flap {
+            transform: rotateX(180deg);
+            z-index: 1;
+        }
+
+        .letter-card {
+            transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s ease;
+        }
+
+        .envelope-open .letter-card {
+            transform: translateY(-80px) scale(1.02);
+        }
+
+        /* Рамки и паттерны */
+        .gold-border {
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .gold-corner-box {
+            position: relative;
+        }
+
+        .gold-corner-box::before, .gold-corner-box::after {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border: 1px solid #d4af37;
+            pointer-events: none;
+        }
+
+        .gold-corner-box::before { top: 12px; left: 12px; border-right: none; border-bottom: none; }
+        .gold-corner-box::after { bottom: 12px; right: 12px; border-left: none; border-top: none; }
+
+        /* Фоновый паттерн бумаги */
+        .paper-bg {
+            background-color: #ffffff;
+            background-image: radial-gradient(#d4af37 0.4px, transparent 0.4px);
+            background-size: 24px 24px;
+            background-color: #fffefb;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-3 md:p-6">
+
+    <!-- Экран открытия приглашения (Интерактивный конверт) -->
+    <div id="envelopeScreen" class="fixed inset-0 z-50 flex items-center justify-center bg-[#f5efe6] p-4 transition-opacity duration-700">
+        <div class="text-center max-w-md w-full">
+            <p class="font-serif-title text-xl text-[#94815a] tracking-widest uppercase mb-6 animate-pulse">Вам доставлено приглашение</p>
+            
+            <!-- Конверт -->
+            <div id="envelope" onclick="openEnvelope()" class="cursor-pointer group relative w-full max-w-sm mx-auto h-64 bg-[#eee8db] rounded-lg shadow-2xl flex flex-col items-center justify-center border border-[#d9ceb8] transition-all hover:scale-105 duration-300">
+                
+                <!-- Верхняя крышка конверта -->
+                <div class="absolute top-0 left-0 w-full h-32 bg-[#e3dabf] rounded-t-lg border-b border-[#cca352]/30 flex items-center justify-center shadow-sm">
+                    <!-- Печать / Сугуч -->
+                    <div class="w-16 h-16 rounded-full bg-gradient-to-br from-[#c5a059] to-[#8c6f33] shadow-md flex items-center justify-center border-2 border-[#fff3d1] transition-transform duration-300 group-hover:scale-110">
+                        <i class="fa-solid fa-heart text-white text-xl animate-bounce"></i>
+                    </div>
+                </div>
+
+                <div class="mt-20 text-center px-4">
+                    <h2 class="font-cursive text-4xl text-[#8a723e] font-bold">Артур & Карине</h2>
+                    <p class="text-xs text-[#9c8963] tracking-widest uppercase mt-2">Нажмите, чтобы открыть</p>
+                </div>
+            </div>
+
+            <button onclick="openEnvelope()" class="mt-8 px-8 py-3 bg-gradient-to-r from-[#d4af37] to-[#b8973a] text-white rounded-full font-light tracking-widest uppercase text-xs shadow-lg hover:brightness-110 transition-all transform active:scale-95">
+                Открыть открытку
+            </button>
+        </div>
+    </div>
+
+    <!-- Главная карточка приглашения -->
+    <main id="mainCard" class="w-full max-w-2xl opacity-0 transition-opacity duration-1000 my-8">
+        
+        <div class="paper-bg gold-border gold-corner-box rounded-lg shadow-2xl p-6 sm:p-12 md:p-16 text-center relative overflow-hidden">
+            
+            <!-- Декоративная фоновая плашка -->
+            <div class="absolute -top-24 -left-24 w-48 h-48 bg-[#f9f3e5] rounded-full blur-2xl opacity-60 pointer-events-none"></div>
+            <div class="absolute -bottom-24 -right-24 w-48 h-48 bg-[#f9f3e5] rounded-full blur-2xl opacity-60 pointer-events-none"></div>
+
+            <!-- Иконка / Монограмма -->
+            <div class="mb-6 flex items-center justify-center gap-2 text-[#d4af37]">
+                <span class="h-[1px] w-12 bg-gradient-to-r from-transparent to-[#d4af37]"></span>
+                <i class="fa-solid fa-gem text-lg"></i>
+                <span class="h-[1px] w-12 bg-gradient-to-l from-transparent to-[#d4af37]"></span>
+            </div>
+
+            <!-- Заголовок -->
+            <h1 class="font-serif-title text-sm sm:text-base tracking-[0.35em] text-[#8c7b5a] uppercase mb-4">
+                Приглашение на свадьбу
+            </h1>
+
+            <!-- Имена с поддержкой кириллицы и без обрезки букв -->
+            <div class="my-6">
+                <div class="font-cursive text-5xl sm:text-7xl md:text-8xl py-1 shimmer-gold">
+                    Артур
+                </div>
+                <div class="font-serif-title italic text-2xl sm:text-3xl text-[#b3934d] my-1">&amp;</div>
+                <div class="font-cursive text-5xl sm:text-7xl md:text-8xl py-1 shimmer-gold">
+                    Карине
+                </div>
+            </div>
+
+            <p class="text-xs sm:text-sm text-[#8c8270] tracking-widest uppercase my-6 max-w-md mx-auto leading-relaxed">
+                Дорогие родные и близкие!<br>
+                Приглашаем вас разделить с нами самый счастливый день нашей жизни.
+            </p>
+
+            <!-- Дата и время -->
+            <div class="my-8 py-6 border-y border-[#eddcc4] max-w-md mx-auto">
+                <div class="font-serif-title text-2xl sm:text-4xl text-[#3d372e] tracking-widest font-semibold">
+                    24 . 11 . 2026
+                </div>
+                <div class="text-xs sm:text-sm text-[#b8973a] tracking-[0.25em] uppercase font-medium mt-2">
+                    Вторник • В 18:00
+                </div>
+            </div>
+
+            <!-- Локация / Ресторан -->
+            <div class="my-8">
+                <p class="text-xs text-[#8c8270] tracking-widest uppercase mb-1">Место проведения:</p>
+                <p class="font-serif-title text-2xl sm:text-3xl text-[#3d372e] font-bold">
+                    Ресторан «Эмигрант»
+                </p>
+                <div class="flex items-center justify-center gap-2 mt-3 text-xs text-[#a39274]">
+                    <i class="fa-solid fa-location-dot text-[#d4af37]"></i>
+                    <span>Торжественный банкетный зал</span>
+                </div>
+            </div>
+
+            <!-- Таймер отсчёта -->
+            <div class="my-10 p-4 sm:p-6 bg-[#faf6ef] rounded-xl border border-[#ede3d1] max-w-md mx-auto">
+                <p class="text-xs text-[#8c8270] tracking-widest uppercase mb-4">До торжества осталось:</p>
+                <div class="grid grid-cols-4 gap-2 text-center">
+                    <div class="p-2 bg-white rounded-lg shadow-sm">
+                        <span id="days" class="font-serif-title text-2xl sm:text-3xl text-[#b8973a] font-bold">00</span>
+                        <span class="block text-[10px] text-[#9c9383] uppercase">дней</span>
+                    </div>
+                    <div class="p-2 bg-white rounded-lg shadow-sm">
+                        <span id="hours" class="font-serif-title text-2xl sm:text-3xl text-[#b8973a] font-bold">00</span>
+                        <span class="block text-[10px] text-[#9c9383] uppercase">часов</span>
+                    </div>
+                    <div class="p-2 bg-white rounded-lg shadow-sm">
+                        <span id="minutes" class="font-serif-title text-2xl sm:text-3xl text-[#b8973a] font-bold">00</span>
+                        <span class="block text-[10px] text-[#9c9383] uppercase">минут</span>
+                    </div>
+                    <div class="p-2 bg-white rounded-lg shadow-sm">
+                        <span id="seconds" class="font-serif-title text-2xl sm:text-3xl text-[#b8973a] font-bold">00</span>
+                        <span class="block text-[10px] text-[#9c9383] uppercase">секунд</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Подтверждение присутствия (RSVP) -->
+            <div class="my-10 max-w-md mx-auto text-left bg-white p-6 rounded-xl border border-[#ebdcc8] shadow-sm">
+                <h3 class="font-serif-title text-xl text-center text-[#3d372e] font-semibold mb-2">
+                    Подтверждение присутствия
+                </h3>
+                <p class="text-xs text-center text-[#8c8270] mb-6">Пожалуйста, подтвердите ваше присутствие до 1 ноября 2026</p>
+
+                <form id="rsvpForm" onsubmit="handleRSVP(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-medium text-[#7a7060] uppercase tracking-wider mb-1">Ваше имя и фамилия</label>
+                        <input type="text" required placeholder="Иван Иванов" class="w-full px-3 py-2 text-sm border border-[#e0d4c1] rounded-md focus:outline-none focus:ring-1 focus:ring-[#d4af37] bg-[#faf8f5]">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-[#7a7060] uppercase tracking-wider mb-1">Сможете ли вы присутствовать?</label>
+                        <select class="w-full px-3 py-2 text-sm border border-[#e0d4c1] rounded-md focus:outline-none focus:ring-1 focus:ring-[#d4af37] bg-[#faf8f5]">
+                            <option value="yes">С удовольствием приду</option>
+                            <option value="couple">Придем вдвоем</option>
+                            <option value="no">К сожалению, не смогу</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="w-full py-3 bg-gradient-to-r from-[#d4af37] to-[#b8973a] text-white rounded-md text-xs font-medium tracking-widest uppercase shadow-sm hover:brightness-105 transition-all">
+                        Отправить ответ
+                    </button>
+                </form>
+
+                <div id="rsvpSuccess" class="hidden text-center py-4 text-emerald-700 bg-emerald-50 rounded-md border border-emerald-200 mt-4 text-sm">
+                    <i class="fa-solid fa-circle-check text-xl text-emerald-600 mb-1 block"></i>
+                    Спасибо! Ваш ответ успешно принят.
+                </div>
+            </div>
+
+            <!-- Разделитель -->
+            <div class="flex items-center justify-center gap-3 my-8 text-[#d4af37]">
+                <span class="h-[1px] w-16 bg-[#ebdcc8]"></span>
+                <i class="fa-solid fa-heart text-xs opacity-70"></i>
+                <span class="h-[1px] w-16 bg-[#ebdcc8]"></span>
+            </div>
+
+            <!-- Финальная фраза с нежным переливом -->
+            <div class="mt-6 mb-2 font-cursive text-2xl sm:text-3xl md:text-4xl">
+                <span class="shimmer-soft">Два сердца — одна история любви</span>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        // Функция открытия конверта
+        function openEnvelope() {
+            const envelopeScreen = document.getElementById('envelopeScreen');
+            const mainCard = document.getElementById('mainCard');
+            
+            envelopeScreen.classList.add('opacity-0', 'pointer-events-none');
+            setTimeout(() => {
+                envelopeScreen.style.display = 'none';
+                mainCard.classList.remove('opacity-0');
+            }, 600);
+        }
+
+        // Обработка формы RSVP
+        function handleRSVP(event) {
+            event.preventDefault();
+            const form = document.getElementById('rsvpForm');
+            const successMsg = document.getElementById('rsvpSuccess');
+            
+            form.classList.add('hidden');
+            successMsg.classList.remove('hidden');
+        }
+
+        // Обратный отсчёт до 24 ноября 2026 года, 18:00
+        const weddingDate = new Date('2026-11-24T18:00:00').getTime();
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = weddingDate - now;
+
+            if (distance < 0) {
+                document.getElementById('days').innerText = '00';
+                document.getElementById('hours').innerText = '00';
+                document.getElementById('minutes').innerText = '00';
+                document.getElementById('seconds').innerText = '00';
+                return;
+            }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById('days').innerText = String(days).padStart(2, '0');
+            document.getElementById('hours').innerText = String(hours).padStart(2, '0');
+            document.getElementById('minutes').innerText = String(minutes).padStart(2, '0');
+            document.getElementById('seconds').innerText = String(seconds).padStart(2, '0');
+        }
+
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+    </script>
+</body>
+</html>
